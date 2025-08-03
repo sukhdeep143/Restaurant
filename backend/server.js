@@ -53,85 +53,28 @@ const blog = new mongoose.Schema({
 
 const BlogPost = mongoose.model("BlogPost", blog)
 
+app.get("/" , async (req, res)=>{
+  try {
+    res.status(200).send("We are on the home page and api HOME is working!!!")
+  } catch (error) {
+    res.status(500).json({message: error})
+    
+  }
+})
 
 
-app.post("/api/blog", async(req, res)=>{
+app.post("/api/postBlog", async(req, res)=>{
   try {
     const {title, para} = req.body;
-    const createBlog = new BlogPost({title, para});
-    const saveBlog = await createBlog.save();
-    res.status(200).json({message: "Blog is stored", saveBlog})
+    const create = new BlogPost({title, para});
+    const saveCreate = await create.save(); 
 
-
-
+    res.status(200).json({message: "Blog is creted and saved", blog: saveCreate})
     
   } catch (error) {
-     res.status(500).json({message: error})
+    res.status(500).json({message: error})
   }
 })
-
-// These are the routes
-app.get("/", async(request, response)=>{
-    try {
-        response.status(200).json({message: "Home is connect to backend"})
-        console.log("This is home route");
-        
-    } catch (error) {
-        response.status(500).json({message: error})
-    }
-})
-
-app.get("/api/showPost", async (request, response) => {
-  try {
-   res.status(200).json(blog)
-
-  } catch (error) {
-    response.status(500).json({ message: error });
-  }
-});
-
-
-
-// Get the all users
-
-app.get("/api/user", async (req, res)=>{
-   try{
-    res.status(200).json(data)
-  }  catch (error) {
-    response.status(500).json({message: error });
-  }
-})
-
-// Get one user by id
-app.get("/api/user/:id", async (req, res)=>{
-  try{
-    const id = Number(req.params.id);
-    const user = data.find((user)=>user.id === id)
-    res.status(200).json(user)
-  }   catch (error) {
-    response.status(500).json({ message: error });
-  }
-})
-
-
-
-// app.post("/input", async (res))
-app.post("/api/register", async (req, res)=>{
-  try{
-    const {email, name} = req.body;
-    const newUser = new User({
-      email,
-      name
-    })
-
-    const saveUser = await newUser.save();
-    res.status(200).json(saveUser)
-  }   catch (error) {
-    response.status(500).json({ message: error });
-  }
-})
-
-
 
 
 app.listen(PORT, () => {
