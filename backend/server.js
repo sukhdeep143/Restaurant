@@ -53,6 +53,20 @@ const blog = new mongoose.Schema({
 
 const BlogPost = mongoose.model("BlogPost", blog)
 
+const Commit = new mongoose.Schema({
+  name:{
+    type: String,
+    required: true
+  },
+  commit:{
+    type: String,
+    required: true
+  }
+})
+
+const CommitOnWeb = mongoose.model("commitOnWeb", Commit )
+
+
 app.get("/" , async (req, res)=>{
   try {
     res.status(200).send("We are on the home page and api HOME is working!!!")
@@ -62,6 +76,18 @@ app.get("/" , async (req, res)=>{
   }
 })
 
+
+app.post('/api/commit', async(req,res)=>{
+  try {
+    const {name, commit} = req.body;
+    const MakeCommit = new CommitOnWeb({name, commit});
+    const saveCommit = await MakeCommit.save();
+
+    res.status(200).json({message: "You have made an commit about this website", commit : saveCommit})
+  } catch (error) {
+     res.status(500).json({message: error})
+  }
+})
 
 app.post("/api/postBlog", async(req, res)=>{
   try {
