@@ -6,6 +6,8 @@ const cors = require("cors")
 
 
 
+
+
 const app = express();
 const PORT = 5000;
 
@@ -87,22 +89,84 @@ app.post('/api/commit', async(req,res)=>{
   } catch (error) {
      res.status(500).json({message: error})
   }
+});
+
+app.get("/api/commit", async (req, res)=>{
+  try {
+    
+    const result = await CommitOnWeb.find();
+    res.status(200).send(result)
+
+  } catch (error) {
+    res.status(200).json({message: error})
+    
+  }
 })
+
+app.get("/api/commit/:id", async (req, res) => {
+  try {
+    const getId = req.params.id;
+    const commit = await CommitOnWeb.findById(getId)
+
+    if (commit) {
+      res.status(200).send(commit);
+    } else {
+      res.status(404).json({ message: "Commit not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+
+
+
 
 app.post("/api/postBlog", async(req, res)=>{
   try {
     const {title, para} = req.body;
     const create = new BlogPost({title, para});
     const saveCreate = await create.save(); 
-
+    
     res.status(200).json({message: "Blog is creted and saved", blog: saveCreate})
     
   } catch (error) {
     res.status(500).json({message: error})
   }
+});
+
+app.get("/api/post", async(req, res)=>{
+  try {
+
+    const result = await BlogPost.find();
+    res.status(200).json({message: "We got the data!!!", post: result})
+    
+  } catch (error) {
+    res.status(500).json({message: error});
+    
+  }
+});
+
+app.get("/api/post/:id", async(req, res)=>{
+  try{
+
+    const getId = req.params.id;
+    const postId = await BlogPost.findById(getId);
+
+    if(postId){
+      res.status(200).send(postId);
+    } else{
+      res.sendStatus(error)
+    }
+
+
+  } catch(error){
+    res.status(500).json({message: error})
+  }
 })
 
-
 app.listen(PORT, () => {
+
   console.log(`Server is listioning on port ${PORT}`);
 });
