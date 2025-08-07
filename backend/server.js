@@ -164,6 +164,23 @@ app.get("/api/post/:id", async(req, res)=>{
   } catch(error){
     res.status(500).json({message: error})
   }
+});
+
+app.delete("/api/postDelete/:id", async(req, res)=>{
+  try{
+
+      const getId = req.params.id;
+      const deletePost = await BlogPost.findByIdAndDelete(getId);
+
+      if(deletePost){
+        res.status(200).send("Post is deleted")
+      } else(
+        res.sendStatus(200).json({"message": "something is wrong"})
+      )
+
+  } catch(error){
+    res.sendStatus(500).json({Message: error})
+  }
 })
 
 app.listen(PORT, () => {
