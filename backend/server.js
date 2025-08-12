@@ -3,11 +3,6 @@ const data = require("./MOCK_DATA.json")
 const mongoose = require("mongoose");
 const cors = require("cors")
 
-
-
-
-
-
 const app = express();
 const PORT = 5000;
 
@@ -21,10 +16,7 @@ mongoose.connect("mongodb+srv://projectinterpro:I3vtSXTH9CS8n0Ak@cluster0i.xntlw
   .catch((error)=>{
     console.log("We can't connected to database !!!", error)
 
-  })
-
-
-
+})
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -51,7 +43,7 @@ const blog = new mongoose.Schema({
     type: String,
     required: true
   }
-})
+});
 
 const BlogPost = mongoose.model("BlogPost", blog)
 
@@ -64,10 +56,23 @@ const Commit = new mongoose.Schema({
     type: String,
     required: true
   }
+});
+
+const CommitOnWeb = mongoose.model("CommitOnWeb", Commit )
+
+const form = new mongoose.Schema({
+  name:{
+    type: String,
+    required: true
+  },
+  age: {
+    type: Number,
+    required: true
+
+  }
 })
 
-const CommitOnWeb = mongoose.model("commitOnWeb", Commit )
-
+const FormModel = mongoose.model("FormModel", form);
 
 app.get("/" , async (req, res)=>{
   try {
@@ -101,7 +106,7 @@ app.get("/api/commit", async (req, res)=>{
     res.status(200).json({message: error})
     
   }
-})
+});
 
 app.get("/api/commit/:id", async (req, res) => {
   try {
@@ -117,6 +122,18 @@ app.get("/api/commit/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+app.post("/api/form", async(req,res)=>{
+  try{
+    const {name, age} = req.body;
+    const create = new FormModel({name, age});
+    const saveData = await create.save()
+    res.status(201).json({message: "Form submited", form: saveData})
+    
+  } catch(error){
+    res.status(500).json({message: error})
+  }
+})
 
 
 
@@ -146,8 +163,23 @@ app.get("/api/post", async(req, res)=>{
     res.status(500).json({message: error});
     
   }
+
 });
 
+app.get("/api/formData", async(req, res)=>{
+    try {
+
+    const result = await FormModel.find();
+    res.status(200).json({message: "We got the data!!!", post: result})
+    
+  } catch (error) {
+    res.status(500).json({message: error});
+    
+  }
+  
+
+  
+})
 app.get("/api/post/:id", async(req, res)=>{
   try{
 
