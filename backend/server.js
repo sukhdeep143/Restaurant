@@ -1,22 +1,29 @@
 const express = require("express");
-const data = require("./MOCK_DATA.json")
-const mongoose = require("mongoose");
+const { connectMongoDB } = require("./connection.js")
 const cors = require("cors")
+const CommitRouter = require("./routes/Commit.js")
+const fs = require("fs")
 
 const app = express();
 const PORT = 5000;
 
+app.use("/commit", CommitRouter)
+
+connectMongoDB("mongodb+srv://projectinterpro:I3vtSXTH9CS8n0Ak@cluster0i.xntlwlc.mongodb.net/maur")
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect("mongodb+srv://projectinterpro:I3vtSXTH9CS8n0Ak@cluster0i.xntlwlc.mongodb.net/maur")
-  .then(()=>{
-    console.log("We are connected to database")
-  })
-  .catch((error)=>{
-    console.log("We can't connected to database !!!", error)
-
+app.use((req, res, next)=>{
+  fs.appendFile(
+    "log.txt",
+    `\n ${Data.now}: ${req.method}:${req.ip} ${req.path}`,
+    (err , data)=>{
+      next();
+    }
+  )
 })
+
+
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -31,9 +38,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 // module.exports = User;
-
-
-
 const blog = new mongoose.Schema({
   title:{
     type: String,
@@ -46,8 +50,6 @@ const blog = new mongoose.Schema({
 });
 
 const BlogPost = mongoose.model("BlogPost", blog)
-
-
 
 const form = new mongoose.Schema({
   name:{
@@ -72,8 +74,6 @@ app.get("/" , async (req, res)=>{
   }
 })
 
-
-
 app.post("/api/form", async(req,res)=>{
   try{
     const {name, age} = req.body;
@@ -85,11 +85,6 @@ app.post("/api/form", async(req,res)=>{
     res.status(500).json({message: error})
   }
 })
-
-
-
-
-
 
 app.post("/api/postBlog", async(req, res)=>{
   try {
@@ -112,9 +107,7 @@ app.get("/api/post", async(req, res)=>{
     
   } catch (error) {
     res.status(500).json({message: error});
-    
   }
-
 });
 
 app.get("/api/formData", async(req, res)=>{
@@ -124,12 +117,8 @@ app.get("/api/formData", async(req, res)=>{
     res.status(200).json({message: "We got the data!!!", post: result})
     
   } catch (error) {
-    res.status(500).json({message: error});
-    
+    res.status(500).json({message: error}); 
   }
-  
-
-  
 })
 app.get("/api/post/:id", async(req, res)=>{
   try{
@@ -142,8 +131,6 @@ app.get("/api/post/:id", async(req, res)=>{
     } else{
       res.sendStatus(error)
     }
-
-
   } catch(error){
     res.status(500).json({message: error})
   }
@@ -167,6 +154,5 @@ app.delete("/api/postDelete/:id", async(req, res)=>{
 })
 
 app.listen(PORT, () => {
-
   console.log(`Server is listioning on port ${PORT}`);
 });

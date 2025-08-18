@@ -1,9 +1,8 @@
-const Commit = require("../models/Commit")
-
-
+const express = require("express")
+const router = express.Router();
 
 // Commit Post
-app.post('/api/commit', async(req,res)=>{
+router.post('/', async(req,res)=>{
   try {
     const {name, commit} = req.body;
     const MakeCommit = new CommitOnWeb({name, commit});
@@ -17,7 +16,7 @@ app.post('/api/commit', async(req,res)=>{
 
 
 // Get commit 
-app.get("/api/commit", async (req, res)=>{
+router.get("/", async (req, res)=>{
   try {
     
     const result = await CommitOnWeb.find();
@@ -31,7 +30,7 @@ app.get("/api/commit", async (req, res)=>{
 
 
 // Get commit using id
-app.get("/api/commit/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const getId = req.params.id;
     const commit = await CommitOnWeb.findById(getId)
@@ -45,3 +44,7 @@ app.get("/api/commit/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+
+
+module.exports = router;
