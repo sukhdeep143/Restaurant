@@ -14,4 +14,4 @@ async function connectMongoDB(url){
 }
 
 
-// module.exports = connectMongoDB;
+module.exports = connectMongoDB;
