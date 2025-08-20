@@ -5,7 +5,7 @@ const routes = express.Router()
 
 
 
-routes.post("/postBlog", async(req, res)=>{
+routes.post("/", async(req, res)=>{
   try {
     const {title, para} = req.body;
     const create = new BlogPost({title, para});
@@ -18,7 +18,7 @@ routes.post("/postBlog", async(req, res)=>{
   }
 });
 
-routes.get("/post", async(req, res)=>{
+routes.get("/", async(req, res)=>{
   try {
 
     const result = await BlogPost.find();
@@ -30,7 +30,7 @@ routes.get("/post", async(req, res)=>{
 });
 
 
-routes.get("/post/:id", async(req, res)=>{
+routes.get("/:id", async(req, res)=>{
   try{
 
     const getId = req.params.id;
@@ -46,7 +46,7 @@ routes.get("/post/:id", async(req, res)=>{
   }
 });
 
-routes.delete("/postDelete/:id", async(req, res)=>{
+routes.delete("/:id", async(req, res)=>{
   try{
 
       const getId = req.params.id;
