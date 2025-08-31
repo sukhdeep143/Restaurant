@@ -1,23 +1,30 @@
 const express = require("express");
 const userRouter = require("./routes/User.js");   // user routes
-// const logMiddleware = require("./middleware/User.js"); 
+const execlRouter =require("./routes/Excel.js")
+const logMiddleware = require("./middleware/User.js"); 
 const connectMongoDB = require("./config/db.js");
 const dotenv = require("dotenv");
+const cors = require("cors")
+
+
+
 
 dotenv.config();
 
 const app = express();
 
+app.use(cors({
+  origin: "http://localhost:3000",  // frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 // Middlewares
 app.use(express.json());
-// app.use(logMiddleware());
-const logMiddleware = (req, res, next) => {
- console.log("This is the middleware!!!");
- 
-  next();
-};
+app.use(logMiddleware)
 // Routes
 app.use("/register", userRouter);
+app.use("/excel",execlRouter )
+
 
 // MongoDB Connection
 // const MONGO_URL = process.env.MONGO_URL;
