@@ -103,9 +103,29 @@ const downloadExcel = async (req, res) => {
   }
 };
 
+const findTheCandi = async (req, res) =>{
+  try {
+    const { batchCode } = req.params;
 
+    // Check if batchCode exists
+    if (!batchCode) {
+      return res.status(400).json({ message: "Batch code is required." });
+    }
+    
+    // Use an exact match query
+    const findUser = await GetUserExeclModel.find({ Batch_Code: batchCode });
+
+    // Send a success response
+    res.status(200).json(findUser);
+
+  } catch (error) {
+    // Send an error response
+    res.status(500).json({ message: "Can't find the data", error: error.message });
+  }
+};
 module.exports = {
   GetUserExecl,
   downloadExcel,
-  getData
+  getData,
+  findTheCandi
 };
